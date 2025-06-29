@@ -18,25 +18,25 @@ Instalación
 
 1. Clona el repositorio:
 
-  git clone https://github.com/jenriquerg/backend-fiber.git
-  cd backend-fiber
+    git clone https://github.com/jenriquerg/backend-fiber.git
+    cd backend-fiber
 
 2. Instala dependencias:
 
-  go mod download
+    go mod download
 
 3. Configura variables de entorno
 
-  Crea un archivo .env en la raíz con:
+    Crea un archivo .env en la raíz con:
 
-  DATABASE_URL=postgresql://usuario:contraseña@host.supabase.co:6543/postgres
-  PORT=3000
+    DATABASE_URL=postgresql://usuario:contraseña@host.supabase.co:6543/postgres
+    PORT=3000
 
 4. Corre la aplicación:
 
-  go run main.go
+    go run main.go
 
-Estructura del proyecto
+## Estructura del proyecto
 
   backend-fiber/
   ├── config/ # Configuración de base de datos
@@ -49,7 +49,7 @@ Estructura del proyecto
 
 
 
-Seguridad
+## Seguridad
 
   Nunca publiques el archivo .env ni compartas la contraseña de tu base de datos.
 
@@ -57,7 +57,7 @@ Seguridad
 
   Implementa validaciones y sanitización de inputs.
 
-Contacto
+## Contacto
 
   Jesús Enrique Rojas
   github.com/jenriquerg
