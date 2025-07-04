@@ -7,9 +7,16 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jenriquerg/backend-fiber/config"
 	"github.com/jenriquerg/backend-fiber/routes"
+	"github.com/joho/godotenv"
+	"log"
 )
 
 func main() {
+
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error cargando archivo .env")
+	}
+
 	config.ConnectDB()
 
 	app := fiber.New()

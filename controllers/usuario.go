@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jenriquerg/backend-fiber/config"
 	"github.com/jenriquerg/backend-fiber/models"
+	"github.com/pquerna/otp/totp"
 	"golang.org/x/crypto/bcrypt"
 	"time"
 )
@@ -42,16 +43,24 @@ func CreateUsuario(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "JSON inválido"})
 	}
 
-	//Formatar la fecha a mano
 	fecha, err := time.Parse("2006-01-02", input.FechaNacimiento)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{"error": "Formato de fecha inválido. Usa YYYY-MM-DD"})
 	}
 
-	// Hashear la contraseña
+	// Hashear contraseña
 	hashed, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Error al encriptar contraseña"})
+	}
+
+	// Generar clave secreta TOTP
+	key, err := totp.Generate(totp.GenerateOpts{
+		Issuer:      "MiApp", // Cambiar por tu app
+		AccountName: input.Correo,
+	})
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Error generando clave TOTP"})
 	}
 
 	usuario := models.Usuario{
@@ -62,6 +71,7 @@ func CreateUsuario(c *fiber.Ctx) error {
 		Genero:          input.Genero,
 		Correo:          input.Correo,
 		Password:        string(hashed),
+		SecretTOTP:      key.Secret(),
 		CreadoEn:        time.Now(),
 		ActualizadoEn:   time.Now(),
 	}
@@ -70,7 +80,36 @@ func CreateUsuario(c *fiber.Ctx) error {
 		return c.Status(500).JSON(fiber.Map{"error": "No se pudo crear el usuario"})
 	}
 
-	return c.Status(201).JSON(usuario)
+	qrURL := key.URL()
+
+	response := struct {
+		ID              uint      `json:"id"`
+		Nombre          string    `json:"nombre"`
+		Apellidos       string    `json:"apellidos"`
+		Tipo            string    `json:"tipo"`
+		FechaNacimiento string    `json:"fecha_nacimiento"`
+		Genero          string    `json:"genero"`
+		Correo          string    `json:"correo"`
+		CreadoEn        time.Time `json:"creado_en"`
+		ActualizadoEn   time.Time `json:"actualizado_en"`
+		QRURL           string    `json:"qr_url"`
+		Message         string    `json:"message"`
+	}{
+		ID:              usuario.ID,
+		Nombre:          usuario.Nombre,
+		Apellidos:       usuario.Apellidos,
+		Tipo:            usuario.Tipo,
+		FechaNacimiento: usuario.FechaNacimiento.Format("2006-01-02"),
+		Genero:          usuario.Genero,
+		Correo:          usuario.Correo,
+		CreadoEn:        usuario.CreadoEn,
+		ActualizadoEn:   usuario.ActualizadoEn,
+		QRURL:           qrURL,
+		Message:         "Usuario creado exitosamente. Escanea el QR para configurar tu autenticador.",
+	}
+
+	return c.Status(201).JSON(response)
+
 }
 
 func UpdateUsuario(c *fiber.Ctx) error {
@@ -113,7 +152,7 @@ func UpdateUsuario(c *fiber.Ctx) error {
 		usuario.Password = string(hash)
 	}
 
-	// Actualizar campos
+	// Actualizar campos (sin tocar SecretTOTP)
 	usuario.Nombre = input.Nombre
 	usuario.Apellidos = input.Apellidos
 	usuario.Tipo = input.Tipo
@@ -127,7 +166,30 @@ func UpdateUsuario(c *fiber.Ctx) error {
 		return c.Status(500).JSON(fiber.Map{"error": "No se pudo actualizar el usuario"})
 	}
 
-	return c.JSON(usuario)
+	// Retornamos usuario filtrado sin password ni secret (igual que en Create)
+	response := struct {
+		ID              uint      `json:"id"`
+		Nombre          string    `json:"nombre"`
+		Apellidos       string    `json:"apellidos"`
+		Tipo            string    `json:"tipo"`
+		FechaNacimiento string    `json:"fecha_nacimiento"`
+		Genero          string    `json:"genero"`
+		Correo          string    `json:"correo"`
+		CreadoEn        time.Time `json:"creado_en"`
+		ActualizadoEn   time.Time `json:"actualizado_en"`
+	}{
+		ID:              usuario.ID,
+		Nombre:          usuario.Nombre,
+		Apellidos:       usuario.Apellidos,
+		Tipo:            usuario.Tipo,
+		FechaNacimiento: usuario.FechaNacimiento.Format("2006-01-02"),
+		Genero:          usuario.Genero,
+		Correo:          usuario.Correo,
+		CreadoEn:        usuario.CreadoEn,
+		ActualizadoEn:   usuario.ActualizadoEn,
+	}
+
+	return c.JSON(response)
 }
 
 func DeleteUsuario(c *fiber.Ctx) error {
@@ -138,4 +200,3 @@ func DeleteUsuario(c *fiber.Ctx) error {
 	}
 	return c.Status(200).JSON(fiber.Map{"message": "Usuario eliminado"})
 }
-

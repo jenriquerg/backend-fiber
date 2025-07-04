@@ -3,14 +3,15 @@ package routes
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jenriquerg/backend-fiber/controllers"
+	"github.com/jenriquerg/backend-fiber/middlewares"
 )
 
 func ExpedienteRoutes(app *fiber.App) {
-	r := app.Group("/expedientes")
+	exp := app.Group("/expedientes")
 
-	r.Get("/", controllers.GetExpedientes)
-	r.Get("/:id", controllers.GetExpediente)
-	r.Post("/", controllers.CreateExpediente)
-	r.Put("/:id", controllers.UpdateExpediente)
-	r.Delete("/:id", controllers.DeleteExpediente)
+	exp.Get("/", middlewares.CheckPermission("get_expedientes"), controllers.GetExpedientes)
+	exp.Get("/:id", middlewares.CheckPermission("get_expediente"), controllers.GetExpediente)
+	exp.Post("/", middlewares.CheckPermission("add_expediente"), controllers.CreateExpediente)
+	exp.Put("/:id", middlewares.CheckPermission("update_expediente"), controllers.UpdateExpediente)
+	exp.Delete("/:id", middlewares.CheckPermission("delete_expediente"), controllers.DeleteExpediente)
 }
