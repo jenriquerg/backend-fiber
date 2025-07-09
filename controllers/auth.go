@@ -15,6 +15,8 @@ import (
 )
 
 func Register(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "R01")
+	c.Locals("intCodeError", "F01")
 	var input struct {
 		Nombre          string `json:"nombre"`
 		Apellidos       string `json:"apellidos"`
@@ -92,6 +94,8 @@ func Register(c *fiber.Ctx) error {
 
 
 func Login(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "L01")
+	c.Locals("intCodeError", "F02")
 	var input struct {
 		Correo   string `json:"correo"`
 		Password string `json:"password"`

@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jenriquerg/backend-fiber/config"
 	"github.com/jenriquerg/backend-fiber/routes"
+	"github.com/jenriquerg/backend-fiber/middlewares"
 	"github.com/joho/godotenv"
 	"log"
 )
@@ -25,6 +26,8 @@ func main() {
 		Max:        10,
 		Expiration: 1 * time.Minute,
 	}))
+
+	app.Use(middlewares.StandardResponse())
 
 	routes.UsuarioRoutes(app)
 	routes.AuthRoutes(app)

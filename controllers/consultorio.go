@@ -7,6 +7,8 @@ import (
 )
 
 func GetConsultorios(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "CT01")
+	c.Locals("intCodeError", "F08")
 	var consultorios []models.Consultorio
 	if err := config.DB.Find(&consultorios).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Error al obtener consultorios"})
@@ -15,6 +17,8 @@ func GetConsultorios(c *fiber.Ctx) error {
 }
 
 func GetConsultorio(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "CT02")
+	c.Locals("intCodeError", "F09")	
 	id := c.Params("id")
 	var consultorio models.Consultorio
 	if err := config.DB.First(&consultorio, id).Error; err != nil {
@@ -24,6 +28,8 @@ func GetConsultorio(c *fiber.Ctx) error {
 }
 
 func CreateConsultorio(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "CT03")
+	c.Locals("intCodeError", "F10")
 	var input models.Consultorio
 	if err := c.BodyParser(&input); err != nil {
 		return c.Status(400).JSON(fiber.Map{"error": "JSON inválido"})
@@ -40,6 +46,8 @@ func CreateConsultorio(c *fiber.Ctx) error {
 }
 
 func UpdateConsultorio(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "CT04")
+	c.Locals("intCodeError", "F11")
 	id := c.Params("id")
 	var consultorio models.Consultorio
 	if err := config.DB.First(&consultorio, id).Error; err != nil {
@@ -65,6 +73,8 @@ func UpdateConsultorio(c *fiber.Ctx) error {
 }
 
 func DeleteConsultorio(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "CT05")
+	c.Locals("intCodeError", "F12")
 	id := c.Params("id")
 	if err := config.DB.Delete(&models.Consultorio{}, id).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Error al eliminar consultorio"})

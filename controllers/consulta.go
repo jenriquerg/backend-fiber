@@ -9,6 +9,8 @@ import (
 )
 
 func GetConsultas(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "C01")
+	c.Locals("intCodeError", "F03")
 	var consultas []models.Consulta
 	if err := config.DB.Find(&consultas).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Error al obtener consultas"})
@@ -17,6 +19,8 @@ func GetConsultas(c *fiber.Ctx) error {
 }
 
 func GetConsulta(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "C02")
+	c.Locals("intCodeError", "F04")
 	id := c.Params("id")
 	var consulta models.Consulta
 	if err := config.DB.First(&consulta, id).Error; err != nil {
@@ -26,6 +30,8 @@ func GetConsulta(c *fiber.Ctx) error {
 }
 
 func CreateConsulta(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "C03")
+	c.Locals("intCodeError", "F05")
 	type rawConsulta struct {
 		IDConsultorio uint   `json:"id_consultorio"`
 		IDMedico      uint   `json:"id_medico"`
@@ -61,6 +67,8 @@ func CreateConsulta(c *fiber.Ctx) error {
 }
 
 func UpdateConsulta(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "C04")
+	c.Locals("intCodeError", "F06")
 	id := c.Params("id")
 	var consulta models.Consulta
 	if err := config.DB.First(&consulta, id).Error; err != nil {
@@ -100,6 +108,8 @@ func UpdateConsulta(c *fiber.Ctx) error {
 }
 
 func DeleteConsulta(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "C05")
+	c.Locals("intCodeError", "F07")
 	id := c.Params("id")
 	if err := config.DB.Delete(&models.Consulta{}, id).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Error al eliminar consulta"})

@@ -10,6 +10,8 @@ import (
 )
 
 func GetUsuarios(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "U01")
+	c.Locals("intCodeError", "F27")
 	var usuarios []models.Usuario
 	if err := config.DB.Find(&usuarios).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Error al obtener usuarios"})
@@ -18,6 +20,8 @@ func GetUsuarios(c *fiber.Ctx) error {
 }
 
 func GetUsuario(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "U02")
+	c.Locals("intCodeError", "F28")
 	id := c.Params("id")
 	var usuario models.Usuario
 	if err := config.DB.First(&usuario, id).Error; err != nil {
@@ -27,6 +31,8 @@ func GetUsuario(c *fiber.Ctx) error {
 }
 
 func CreateUsuario(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "U03")
+	c.Locals("intCodeError", "F29")
 	type rawUsuario struct {
 		Nombre          string `json:"nombre"`
 		Apellidos       string `json:"apellidos"`
@@ -113,6 +119,8 @@ func CreateUsuario(c *fiber.Ctx) error {
 }
 
 func UpdateUsuario(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "U04")
+	c.Locals("intCodeError", "F30")
 	id := c.Params("id")
 
 	type rawUsuario struct {
@@ -193,6 +201,8 @@ func UpdateUsuario(c *fiber.Ctx) error {
 }
 
 func DeleteUsuario(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "U05")
+	c.Locals("intCodeError", "F31")
 	id := c.Params("id")
 
 	if err := config.DB.Delete(&models.Usuario{}, id).Error; err != nil {

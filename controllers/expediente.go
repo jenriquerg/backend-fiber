@@ -8,6 +8,8 @@ import (
 )
 
 func GetExpedientes(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "E01")
+	c.Locals("intCodeError", "F17")
 	var expedientes []models.Expediente
 	if err := config.DB.Find(&expedientes).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Error al obtener expedientes"})
@@ -16,6 +18,8 @@ func GetExpedientes(c *fiber.Ctx) error {
 }
 
 func GetExpediente(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "E02")
+	c.Locals("intCodeError", "F18")
 	id := c.Params("id")
 	var expediente models.Expediente
 	if err := config.DB.First(&expediente, id).Error; err != nil {
@@ -25,6 +29,8 @@ func GetExpediente(c *fiber.Ctx) error {
 }
 
 func CreateExpediente(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "E03")
+	c.Locals("intCodeError", "F19")
 	type rawExpediente struct {
 		PacienteID             uint   `json:"paciente_id"`
 		GrupoSanguineo         string `json:"grupo_sanguineo"`
@@ -68,6 +74,8 @@ func CreateExpediente(c *fiber.Ctx) error {
 }
 
 func UpdateExpediente(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "E04")
+	c.Locals("intCodeError", "F20")
 	id := c.Params("id")
 
 	var input map[string]interface{}
@@ -95,6 +103,8 @@ func UpdateExpediente(c *fiber.Ctx) error {
 }
 
 func DeleteExpediente(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "E05")
+	c.Locals("intCodeError", "F21")
 	id := c.Params("id")
 	if err := config.DB.Delete(&models.Expediente{}, id).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "No se pudo eliminar expediente"})

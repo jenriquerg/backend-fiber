@@ -8,6 +8,8 @@ import (
 )
 
 func GetRecetas(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "R01")
+	c.Locals("intCodeError", "F22")
 	var recetas []models.Receta
 	if err := config.DB.Find(&recetas).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Error al obtener recetas"})
@@ -16,6 +18,8 @@ func GetRecetas(c *fiber.Ctx) error {
 }
 
 func GetReceta(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "R02")
+	c.Locals("intCodeError", "F23")
 	id := c.Params("id")
 	var receta models.Receta
 	if err := config.DB.First(&receta, id).Error; err != nil {
@@ -25,6 +29,8 @@ func GetReceta(c *fiber.Ctx) error {
 }
 
 func CreateReceta(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "R03")
+	c.Locals("intCodeError", "F24")
 	type rawReceta struct {
 		IdConsulta  uint   `json:"id_consulta"`
 		Fecha       string `json:"fecha"` // Formato: YYYY-MM-DD
@@ -59,6 +65,8 @@ func CreateReceta(c *fiber.Ctx) error {
 }
 
 func UpdateReceta(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "R04")
+	c.Locals("intCodeError", "F25")
 	id := c.Params("id")
 
 	var input struct {
@@ -97,6 +105,8 @@ func UpdateReceta(c *fiber.Ctx) error {
 }
 
 func DeleteReceta(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "R05")
+	c.Locals("intCodeError", "F26")
 	id := c.Params("id")
 	if err := config.DB.Delete(&models.Receta{}, id).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Error al eliminar receta"})

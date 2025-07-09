@@ -8,6 +8,8 @@ import (
 )
 
 func GetControles(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "CN01")
+	c.Locals("intCodeError", "F13")
 	var controles []models.Control
 	if err := config.DB.Find(&controles).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Error al obtener controles"})
@@ -16,6 +18,8 @@ func GetControles(c *fiber.Ctx) error {
 }
 
 func GetControl(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "CN02")
+	c.Locals("intCodeError", "F14")
 	id := c.Params("id")
 	var control models.Control
 	if err := config.DB.First(&control, id).Error; err != nil {
@@ -25,6 +29,8 @@ func GetControl(c *fiber.Ctx) error {
 }
 
 func CreateControl(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "CN03")
+	c.Locals("intCodeError", "F15")
 	type rawControl struct {
 		PacienteID             uint    `json:"paciente_id"`
 		PesoKg                 float64 `json:"peso_kg"`
@@ -73,6 +79,8 @@ func CreateControl(c *fiber.Ctx) error {
 }
 
 func DeleteControl(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "CN04")
+	c.Locals("intCodeError", "F16")
 	id := c.Params("id")
 	if err := config.DB.Delete(&models.Control{}, id).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Error al eliminar control"})
