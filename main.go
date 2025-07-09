@@ -27,6 +27,7 @@ func main() {
 		Expiration: 1 * time.Minute,
 	}))
 
+	app.Use(middlewares.RequestLogger())
 	app.Use(middlewares.StandardResponse())
 
 	routes.UsuarioRoutes(app)

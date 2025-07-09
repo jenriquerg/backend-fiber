@@ -11,3 +11,6 @@ Se crearon los endpoints para el resto de las tablas y las de autenticación, pa
 
 ## Version 0.0.3 Middlewares 29/07/2025
 Se crearon los middlewares para el JSON  Schema y la proteccion de rutas, asi como la creación del token con permisos en la version "Checkpoint 51"
+
+## Version 0.0.4 Logs 29/07/2025
+Se crearon los middlewares para el registro de logs y se implementó
