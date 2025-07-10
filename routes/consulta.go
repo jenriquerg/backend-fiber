@@ -14,4 +14,7 @@ func ConsultasRoutes(app *fiber.App) {
 	consultas.Post("/", middlewares.CheckPermission("add_consulta"), controllers.CreateConsulta)
 	consultas.Put("/:id", middlewares.CheckPermission("update_consulta"), controllers.UpdateConsulta)
 	consultas.Delete("/:id", middlewares.CheckPermission("delete_consulta"), controllers.DeleteConsulta)
+	consultas.Get("/paciente/:id", middlewares.CheckPermission("get_consultas_paciente"), controllers.GetConsultasByPaciente)
+	consultas.Get("/medico/:id", middlewares.CheckPermission("get_consultas_medico"), controllers.GetConsultasByMedico)
+
 }

@@ -3,18 +3,22 @@ package controllers
 
 import (
 	"os"
-	"time"
 	"regexp"
+	"time"
+
+	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
-	"golang.org/x/crypto/bcrypt"
-	"github.com/pquerna/otp/totp"
 	"github.com/jenriquerg/backend-fiber/config"
 	"github.com/jenriquerg/backend-fiber/models"
+	"github.com/pquerna/otp/totp"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Register(c *fiber.Ctx) error {
+	body := c.Body()
+	fmt.Println("Body recibido:", string(body))
 	c.Locals("intCodeSuccess", "R01")
 	c.Locals("intCodeError", "F01")
 	var input struct {
@@ -31,7 +35,7 @@ func Register(c *fiber.Ctx) error {
 	}
 
 	// Validar contraseña segura
-	if len(input.Password) < 12 {
+	if len(input.Password) < 10 {
 		return c.Status(400).JSON(fiber.Map{"error": "La contraseña debe tener al menos 12 caracteres"})
 	}
 
@@ -60,7 +64,7 @@ func Register(c *fiber.Ctx) error {
 	}
 
 	key, err := totp.Generate(totp.GenerateOpts{
-		Issuer:      "backend-fiber",
+		Issuer:      "GH-Advanced",
 		AccountName: input.Correo,
 	})
 	if err != nil {
@@ -83,15 +87,16 @@ func Register(c *fiber.Ctx) error {
 	if err := config.DB.Create(&usuario).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "No se pudo registrar el usuario"})
 	}
+	
 
 	qrURL := key.URL()
+	
 
 	return c.Status(201).JSON(fiber.Map{
 		"message": "Registro exitoso",
 		"qr_url":  qrURL,
 	})
 }
-
 
 func Login(c *fiber.Ctx) error {
 	c.Locals("intCodeSuccess", "L01")

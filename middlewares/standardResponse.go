@@ -15,17 +15,26 @@ func StandardResponse() fiber.Handler {
 		status := c.Response().StatusCode()
 		bodyBytes := c.Response().Body()
 
-		// Parsear body
-		var originalData interface{}
+		var parsed interface{}
 		if len(bodyBytes) > 0 {
-			if err := json.Unmarshal(bodyBytes, &originalData); err != nil {
-				originalData = string(bodyBytes)
+			if err := json.Unmarshal(bodyBytes, &parsed); err != nil {
+				parsed = string(bodyBytes)
 			}
 		}
 
-		// Obtener intCode (puede ser string o int)
-		var intCode interface{}
+		// Transformar a arreglo siempre
+		var data []interface{}
+		switch v := parsed.(type) {
+		case nil:
+			data = []interface{}{}
+		case []interface{}:
+			data = v
+		default:
+			data = []interface{}{v}
+		}
 
+		// Obtener intCode (string o int)
+		var intCode interface{}
 		if status >= 200 && status < 300 {
 			if code := c.Locals("intCodeSuccess"); code != nil {
 				switch v := code.(type) {
@@ -57,11 +66,11 @@ func StandardResponse() fiber.Handler {
 			}
 		}
 
-		// Armar respuesta estandarizada
+		// Empaquetar respuesta final
 		wrapped, _ := json.Marshal(fiber.Map{
 			"statusCode": status,
 			"intCode":    intCode,
-			"data":       originalData,
+			"data":       data,
 		})
 		c.Response().SetBody(wrapped)
 		return nil

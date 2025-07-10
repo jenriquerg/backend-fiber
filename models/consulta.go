@@ -10,4 +10,5 @@ type Consulta struct {
 	Tipo         string    `json:"tipo"`
 	Horario      time.Time `json:"horario"`
 	Diagnostico  string    `json:"diagnostico"`
+	Costo 			 *float64     `json:"costo"`
 }

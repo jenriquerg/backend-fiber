@@ -39,6 +39,7 @@ func CreateConsulta(c *fiber.Ctx) error {
 		Tipo          string `json:"tipo"`
 		Horario       string `json:"horario"`
 		Diagnostico   string `json:"diagnostico"`
+		Costo         *float64 `json:"costo"`
 	}
 
 	var input rawConsulta
@@ -58,6 +59,7 @@ func CreateConsulta(c *fiber.Ctx) error {
 		Tipo:          input.Tipo,
 		Horario:       horario,
 		Diagnostico:   input.Diagnostico,
+		Costo:         input.Costo,
 	}
 
 	if err := config.DB.Create(&consulta).Error; err != nil {
@@ -82,6 +84,7 @@ func UpdateConsulta(c *fiber.Ctx) error {
 		Tipo          string `json:"tipo"`
 		Horario       string `json:"horario"`
 		Diagnostico   string `json:"diagnostico"`
+		Costo         *float64 `json:"costo"`
 	}
 
 	var input rawConsulta
@@ -100,6 +103,7 @@ func UpdateConsulta(c *fiber.Ctx) error {
 	consulta.Tipo = input.Tipo
 	consulta.Horario = horario
 	consulta.Diagnostico = input.Diagnostico
+	consulta.Costo = input.Costo
 
 	if err := config.DB.Save(&consulta).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "No se pudo actualizar la consulta"})
@@ -115,4 +119,30 @@ func DeleteConsulta(c *fiber.Ctx) error {
 		return c.Status(500).JSON(fiber.Map{"error": "Error al eliminar consulta"})
 	}
 	return c.Status(200).JSON(fiber.Map{"message": "Consulta eliminada"})
+}
+
+func GetConsultasByPaciente(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "C06")
+	c.Locals("intCodeError", "F08")
+	id := c.Params("id")
+
+	var consultas []models.Consulta
+	if err := config.DB.Where("id_paciente = ?", id).Find(&consultas).Error; err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Error al obtener las consultas del paciente"})
+	}
+
+	return c.JSON(consultas)
+}
+
+func GetConsultasByMedico(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "C07")
+	c.Locals("intCodeError", "F09")
+	id := c.Params("id")
+
+	var consultas []models.Consulta
+	if err := config.DB.Where("id_medico = ?", id).Find(&consultas).Error; err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Error al obtener las consultas del médico"})
+	}
+
+	return c.JSON(consultas)
 }
