@@ -87,3 +87,14 @@ func DeleteControl(c *fiber.Ctx) error {
 	}
 	return c.JSON(fiber.Map{"message": "Control eliminado"})
 }
+
+func GetControlUsuario(c *fiber.Ctx) error {
+	c.Locals("intCodeSuccess", "CN05")
+	c.Locals("intCodeError", "F34")
+	id := c.Params("paciente_id")
+	var controles []models.Control
+	if err := config.DB.Find(&controles, id).Error; err != nil {
+		return c.Status(404).JSON(fiber.Map{"error": "Control no encontrado"})
+	}
+	return c.JSON(controles)
+}

@@ -20,7 +20,7 @@ func GetExpedientes(c *fiber.Ctx) error {
 func GetExpediente(c *fiber.Ctx) error {
 	c.Locals("intCodeSuccess", "E02")
 	c.Locals("intCodeError", "F18")
-	id := c.Params("id")
+	id := c.Params("paciente_id")
 	var expediente models.Expediente
 	if err := config.DB.First(&expediente, id).Error; err != nil {
 		return c.Status(404).JSON(fiber.Map{"error": "Expediente no encontrado"})

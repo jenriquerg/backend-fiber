@@ -13,4 +13,5 @@ func ControlRoutes(app *fiber.App) {
 	route.Get("/:id", middlewares.CheckPermission("get_control"), controllers.GetControl)
 	route.Post("/", middlewares.CheckPermission("add_control"), controllers.CreateControl)
 	route.Delete("/:id", middlewares.CheckPermission("delete_control"), controllers.DeleteControl)
+	route.Get("/paciente/:id", middlewares.CheckPermission("get_controles_paciente"), controllers.GetControlUsuario)
 }

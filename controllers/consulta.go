@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -33,12 +34,12 @@ func CreateConsulta(c *fiber.Ctx) error {
 	c.Locals("intCodeSuccess", "C03")
 	c.Locals("intCodeError", "F05")
 	type rawConsulta struct {
-		IDConsultorio uint   `json:"id_consultorio"`
-		IDMedico      uint   `json:"id_medico"`
-		IDPaciente    uint   `json:"id_paciente"`
-		Tipo          string `json:"tipo"`
-		Horario       string `json:"horario"`
-		Diagnostico   string `json:"diagnostico"`
+		IDConsultorio uint     `json:"id_consultorio"`
+		IDMedico      uint     `json:"id_medico"`
+		IDPaciente    uint     `json:"id_paciente"`
+		Tipo          string   `json:"tipo"`
+		Horario       string   `json:"horario"`
+		Diagnostico   string   `json:"diagnostico"`
 		Costo         *float64 `json:"costo"`
 	}
 
@@ -47,9 +48,11 @@ func CreateConsulta(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "JSON inválido"})
 	}
 
-	horario, err := time.Parse("2006-01-02T15:04:05", input.Horario)
+	fmt.Println("BODY:", string(c.Body()))
+
+	horario, err := time.Parse(time.RFC3339, input.Horario)
 	if err != nil {
-		return c.Status(400).JSON(fiber.Map{"error": "Formato de fecha inválido. Usa YYYY-MM-DDTHH:MM:SS"})
+		return c.Status(400).JSON(fiber.Map{"error": "Formato de fecha inválido. Usa RFC3339"})
 	}
 
 	consulta := models.Consulta{
@@ -78,12 +81,12 @@ func UpdateConsulta(c *fiber.Ctx) error {
 	}
 
 	type rawConsulta struct {
-		IDConsultorio uint   `json:"id_consultorio"`
-		IDMedico      uint   `json:"id_medico"`
-		IDPaciente    uint   `json:"id_paciente"`
-		Tipo          string `json:"tipo"`
-		Horario       string `json:"horario"`
-		Diagnostico   string `json:"diagnostico"`
+		IDConsultorio uint     `json:"id_consultorio"`
+		IDMedico      uint     `json:"id_medico"`
+		IDPaciente    uint     `json:"id_paciente"`
+		Tipo          string   `json:"tipo"`
+		Horario       string   `json:"horario"`
+		Diagnostico   string   `json:"diagnostico"`
 		Costo         *float64 `json:"costo"`
 	}
 
@@ -123,7 +126,7 @@ func DeleteConsulta(c *fiber.Ctx) error {
 
 func GetConsultasByPaciente(c *fiber.Ctx) error {
 	c.Locals("intCodeSuccess", "C06")
-	c.Locals("intCodeError", "F08")
+	c.Locals("intCodeError", "F32")
 	id := c.Params("id")
 
 	var consultas []models.Consulta
@@ -136,7 +139,7 @@ func GetConsultasByPaciente(c *fiber.Ctx) error {
 
 func GetConsultasByMedico(c *fiber.Ctx) error {
 	c.Locals("intCodeSuccess", "C07")
-	c.Locals("intCodeError", "F09")
+	c.Locals("intCodeError", "F33")
 	id := c.Params("id")
 
 	var consultas []models.Consulta

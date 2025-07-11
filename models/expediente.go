@@ -15,3 +15,7 @@ type Expediente struct {
 	NotasGenerales         string    `json:"notas_generales"`
 	FechaActualizacion     time.Time `json:"fecha_actualizacion" gorm:"type:date"`
 }
+
+func (Expediente) TableName() string {
+	return "expedientes"
+}

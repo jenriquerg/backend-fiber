@@ -17,3 +17,7 @@ type Control struct {
 	NotasGenerales       string    `json:"notas_generales"`
 	Fecha                time.Time `json:"fecha" gorm:"type:date"`
 }
+
+func (Control) TableName() string {
+	return "controles"
+}
