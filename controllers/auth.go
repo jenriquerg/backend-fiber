@@ -35,7 +35,7 @@ func Register(c *fiber.Ctx) error {
 	}
 
 	// Validar contraseña segura
-	if len(input.Password) < 10 {
+	if len(input.Password) < 12 {
 		return c.Status(400).JSON(fiber.Map{"error": "La contraseña debe tener al menos 12 caracteres"})
 	}
 

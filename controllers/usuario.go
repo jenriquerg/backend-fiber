@@ -19,6 +19,7 @@ func GetUsuarios(c *fiber.Ctx) error {
 	return c.JSON(usuarios)
 }
 
+
 func GetUsuario(c *fiber.Ctx) error {
 	c.Locals("intCodeSuccess", "U02")
 	c.Locals("intCodeError", "F28")

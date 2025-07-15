@@ -10,3 +10,7 @@ type Receta struct {
 	Medicamento string    `json:"medicamento"`
 	Dosis       string    `json:"dosis"`
 }
+
+func (Receta) TableName() string {
+	return "recetas"
+}
