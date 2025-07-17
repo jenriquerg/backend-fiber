@@ -93,7 +93,7 @@ func GetControlUsuario(c *fiber.Ctx) error {
 	c.Locals("intCodeError", "F34")
 	id := c.Params("paciente_id")
 	var controles []models.Control
-	if err := config.DB.Find(&controles, id).Error; err != nil {
+	if err := config.DB.Where("paciente_id = ?", id).Find(&controles).Error; err != nil {
 		return c.Status(404).JSON(fiber.Map{"error": "Control no encontrado"})
 	}
 	return c.JSON(controles)

@@ -1,10 +1,10 @@
 package controllers
 
 import (
-	"time"
 	"github.com/gofiber/fiber/v2"
 	"github.com/jenriquerg/backend-fiber/config"
 	"github.com/jenriquerg/backend-fiber/models"
+	"time"
 )
 
 func GetExpedientes(c *fiber.Ctx) error {
@@ -22,7 +22,7 @@ func GetExpediente(c *fiber.Ctx) error {
 	c.Locals("intCodeError", "F18")
 	id := c.Params("paciente_id")
 	var expediente models.Expediente
-	if err := config.DB.First(&expediente, id).Error; err != nil {
+	if err := config.DB.Where("paciente_id = ?", id).First(&expediente).Error; err != nil {
 		return c.Status(404).JSON(fiber.Map{"error": "Expediente no encontrado"})
 	}
 	return c.JSON(expediente)
